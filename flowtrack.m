@@ -7,12 +7,13 @@
 BeginPackage["flowTrack`"];
 
 
-flowTracks::usage = "flowTracks[{image1,image2..}] takes in a sequence of images and outputs a vector field based on either image correlation or
-geometric transformation between sets of points. The window size can be specified as \"windowSize\" -> Integer and
+flowTracks::usage = "flowTracks[{image1,image2..}] takes in a sequence of images and outputs a vector field based on either image
+correlation or geometric transformation between sets of points. The window size can be specified as \"windowSize\" -> Integer and
 the method as \"method\" -> \"PIV\" or \"PTV\"";
 
 
-imagePreprocess::usage = "imagePreprocess[image1,image2, opts] takes in two images and a list of preprocessing options to process images"
+imagePreprocess::usage = "imagePreprocess[image1,image2, opts] takes in two images and a list of preprocessing options to process
+images"
 
 
 PIV::usage = "PIV[image1,image2,windowsize,method] takes in an image pair, a window size and a method to perform a simple PIV"
@@ -28,7 +29,8 @@ PTV::usage = "PTV[image1,image2,windowsize] yields a crude PTV strategy"
 Begin["`Private`"];
 
 
-Options[imagePreprocess]={"clipped"-> False,"histogramEqualize"-> False,"highP"-> False,"wiener"-> False,"wienerSize"-> 3, "highPSize"-> 15}
+Options[imagePreprocess]={"clipped"-> False,"histogramEqualize"-> False,"highP"-> False,"wiener"-> False,
+"wienerSize"-> 3, "highPSize"-> 15}
 imagePreprocess[image1_, image2_,OptionsPattern[]]:=
 Block[{img ,upperlimit},
 img = ColorConvert[#,"Grayscale"]&/@{image1,image2};
@@ -45,8 +47,8 @@ img
 ];
 
 
-PIV[image1_?ImageQ,image2_?ImageQ,win_Integer, pivmethod_]:=Module[{windowsize=win,imgDim=ImageDimensions[image1],img1NoBorder,Img1SplitWins,searchWins,dim,
-midPtsImg1,correlationPts,H,width,img1,img2,imgdata},
+PIV[image1_?ImageQ,image2_?ImageQ,win_Integer, pivmethod_]:=Module[{windowsize=win,imgDim=ImageDimensions[image1],
+img1NoBorder,Img1SplitWins,searchWins,dim, midPtsImg1,correlationPts,H,width,img1,img2,imgdata},
 
 {img1,img2} = imagePreprocess[image1,image2]; (* image preprocessing *)
 
@@ -59,7 +61,8 @@ searchWins=ImagePartition[img2,3*windowsize,{windowsize,windowsize}];
 dim=Dimensions[searchWins];
 H=First@ImageDimensions[img1NoBorder];(*finding the midpoints of the Img1SplitWins*)
 midPtsImg1=Flatten[Table[{i windowsize+windowsize/2,j(windowsize)+windowsize/2},{i,First@dim},{j,Last@dim}],1];
-(*finding correlation points between Img1SplitWins (splitwindows of the first image) and searchWins (search windows) of the second image*)
+(*finding correlation points between Img1SplitWins (splitwindows of the first image) and searchWins (search windows) of the
+second image*)
 correlationPts=Table[imgdata=ImageData@Img1SplitWins[[i+1,j+1]];
 If[And@@Map[First[imgdata]==#&,imgdata,{1}],
 Indeterminate,
@@ -83,13 +86,15 @@ img=Map[Binarize]@(ImageCrop[#,imgDim-(2*win)]&/@{image1,image2});(*binarize the
 rpts=PixelValuePositions[ImagePad[First@img,win],1];(*detecting the particles in the first image*)
 geomtranF=Last[FindGeometricTransform@@img];(*finding the geometric transform*)
 (*sow the vector-field*)
-Sow@Graphics[{Arrowheads[.01], Arrow/@Transpose[{Map[Abs[#-{0,imgCorrD}]&,rpts],Map[Abs[#-{0,imgCorrD}]&,geomtranF[rpts]]}]},Frame->True];
+Sow@Graphics[{Arrowheads[.01], Arrow/@Transpose[{Map[Abs[#-{0,imgCorrD}]&,rpts],Map[Abs[#-{0,imgCorrD}]&,geomtranF[rpts]]}]},
+Frame->True];
 image2
 ]
 
 
 Options[flowTracks]={"method"->"PIV","windowSize"->32,"pivmethod"-> NormalizedSquaredEuclideanDistance};
-flowTracks[p:{images__?ImageQ},OptionsPattern[]]:=Module[{opt=OptionValue["method"], win=OptionValue["windowSize"],pivmethod = OptionValue["pivmethod"]},
+flowTracks[p:{images__?ImageQ},OptionsPattern[]]:=Module[{opt=OptionValue["method"], win=OptionValue["windowSize"],
+pivmethod = OptionValue["pivmethod"]},
 Switch[opt,"PIV",
 (Last@Reap@FoldList[PIV[#1,#2,win,pivmethod]&,First[p],Rest[p]])~Flatten~1,
 "PTV",
