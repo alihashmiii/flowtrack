@@ -19,7 +19,8 @@ images"
 PIV::usage = "PIV[image1,image2,windowsize,method] takes in an image pair, a window size and a method to perform a simple PIV"
 
 
-PTV::usage = "PTV[image1,image2,windowsize] yields a crude PTV strategy"
+PTV::usage = "PTV[image1,image2,windowsize] produces a mapping of the particles in the first image to the particles in second image.
+use for sparse particle case (low density)"
 
 
 (* ::Section:: *)
