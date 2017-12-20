@@ -85,13 +85,11 @@ PTV[image1_?ImageQ,image2_?ImageQ,win_Integer]:=Module[{imgDim=ImageDimensions[i
 imgCorrD=First@imgDim;
 img=Map[Binarize]@(ImageCrop[#,imgDim-(2*win)]&/@{image1,image2});(*binarize the images*)
 rpts=PixelValuePositions[ImagePad[First@img,win],1];(*detecting the particles in the first image*)
-geomtranF=Last[FindGeometricTransform@@img];(*finding the geometric transform*)
+geomtranF=Last[FindGeometricTransform@@img];(*finding the geometric transform between the image-pair *)
 (*sow the vector-field*)
-Sow@Graphics[{Red,Arrowheads[.01], Arrow/@Transpose[{Map[Abs[#-{0,imgCorrD}]&,rpts],Map[Abs[#-{0,imgCorrD}]&,geomtranF[rpts]]}]},
-Frame->True];
+Sow@Graphics[{Arrowheads[.01], Arrow/@Transpose[{rpts,geomtranF[rpts]}]},Frame->True];
 image2
 ]
-
 
 Options[flowTracks]={"method"->"PIV","windowSize"->32,"pivmethod"-> NormalizedSquaredEuclideanDistance};
 flowTracks[p:{images__?ImageQ},OptionsPattern[]]:=Module[{opt=OptionValue["method"], win=OptionValue["windowSize"],
