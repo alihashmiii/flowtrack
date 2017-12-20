@@ -67,12 +67,12 @@ correlationPts=Table[
 imgdata=ImageData@interrogateWin[[i+1,j+1]];
 If[And@@Map[First[imgdata]==#&,imgdata,{1}],
 Indeterminate,
-Composition[First,
-PixelValuePositions[#,0]&,
-Image,
+Composition[
+{#[[2]],height-#[[1]]}&,
+FirstPosition[0],
 MorphologicalComponents]@ImagePad[ImageAdjust@ImageCorrelate[searchWins[[i+1,j+1]],interrogateWin[[i+1,j+1]],
-NormalizedSquaredEuclideanDistance,PerformanceGoal->"Quality"],
-{{j windowsize ,f-windowsize(j+1)},{h-windowsize(i+1),i windowsize}},White]],{i,0,First[dim]-1},{j,0,Last[dim]-1}];
+NormalizedSquaredEuclideanDistance,PerformanceGoal->"Quality"],{{j windowsize ,f-windowsize(j+1)},{h-windowsize(i+1),i windowsize}},
+White]],{i,0,First[dim]-1},{j,0,Last[dim]-1}];
 correlationPts=Cases[correlationPts,{__Integer}|Indeterminate,Infinity];
 {midPtsImg1,correlationPts}=DeleteCases[Thread[{midPtsImg1,correlationPts}],{_,Indeterminate}]\[Transpose];
 (*sow the graphics window with the vectors*)
