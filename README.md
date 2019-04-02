@@ -3,7 +3,10 @@
 
 ![status](https://img.shields.io/badge/status-experimental-lightgrey.svg)
 
-`@author: Ali Hashmi`
+`@author: Ali Hashmi ---- credits/discussion: Sander Huisman &
+Henrik Schachner`
+
+
 
 The package uses Image Correlation for performing PIV on an image-pair. Although i have tested the code for a few cases with success, it may not be robust in nature; part of the reason being that I am not well versed in the literature (e.g. multipass cross-correlation) to make it robust. Therefore the script is meant to be only experimental. Any contributions will be more than welcome !
 
